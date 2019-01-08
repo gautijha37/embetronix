@@ -80,7 +80,7 @@ void dead_end_check(struct grid a){                               //checks dead 
   if(a.grid_cord.x==0&&a.grid_cord.y==1)                          //If grid to check is the (0,1) grid whose south is Start Grid then abort
     return;
   else{
-    for(i=0;i<4&&i!=bot_moving_dir;i++){
+    for(i=0;i<4&&i!=bot.bot_moving_dir;i++){
       x=a.neighbour_cord[i].wallpresent[0]+a.neighbour_cord[i].wallpresent[1]+a.neighbour_cord[i].wallpresent[2]+a.neighbour_cord[i].wallpresent[3];
       if(x==3)                               //if adjacent grid has 3 walls then put fourth wall also
         a.neighbour_cord[i].wallpresent={1,1,1,1};
