@@ -5,8 +5,8 @@
          |
        (0,0)-------> x
 */
-#include<stdio.h>
 
+/*
 struct cord{         //Coordinate of a Cell
   int x,y;
   };
@@ -14,7 +14,7 @@ struct cord{         //Coordinate of a Cell
 struct bot_parameters{
   
   struct cord bot_cord;
-  int bot_moving_dir;  //0,1,2,3 for Bot moving in North,East,West,South
+
   
   };
 
@@ -32,24 +32,18 @@ struct grid{            //One unit of Maze
   struct cord grid_cord;
   struct cord prev_grid_cord;         //this may not be needed... m not sure
   struct cord neighbour_cord[4];     //Neighbour in North,East,West,South
-  
   }
 
 struct grid maze[16][16];
+*/
+#include<stdio.h>
+int bot_moving_dir=0;  //0,1,2,3 for Bot moving in North,East,West,South
+int bot_x_cord=0;
+int bot_y_cord=0;
 
-void neighbours_assign()
-{
-     int i,j;
-     for(i=0;i<16;i++)
-     for(j=0;j<16;j++)
-     {
-                      
-                      maze[i][j].Neighbour_cord[0].x=i;maze[i][j].neighbour_cord[0].y=j-1;
-                      maze[i][j].Neighbour_cord[3].x=i;maze[i][j].neighbour_cord[3].y=j+1;
-                      maze[i][j].Neighbour_cord[2].x=i+1;maze[i][j].neighbour_cord[2].y=j;
-                      maze[i][j].Neighbour_cord[1].x=i-1;maze[i][j].neighbour_cord[1].y=j;
-     }
-}  
+int grid_value[16][16];         //Value of Cell by Floodfill
+int grid_count[16][16];         //No. of times cell has already been visited
+bool wallpresent[16][16][4];    //0,1,2,3 indices for Wall present at North, East, West, South. 1 if wall present, 0 otherwise.
 
 void maze_setup()                      //Initializing grid variables and values with potential value algo
 {
@@ -57,20 +51,18 @@ void maze_setup()                      //Initializing grid variables and values 
      for(i=0;i<16;i++)               //Setting potential values for all grids
      for(j=0;j<16;j++)
      {
-               if((i<8)&&(j<8))       maze[i][j].value=14-j-i;
-               if((i>=8)&&(j<8))      maze[i][j].value=maze[15-i][j].value;  
-               if((i<8)&&(j>=8))      maze[i][j].value=maze[i][15-j].value;
-               if((i>=8)&&(j>=8))     maze[i][j].value=maze[15-i][15-j].value;     
-               maze[i][j].count=0;
-               maze[i][j].grid_cord.x=i;
-               maze[i][j].grid_cord.y=j;
+               if((i<8)&&(j<8))       grid_value[i][j]=14-j-i;
+               if((i>=8)&&(j<8))      grid_value[i][j]=grid_value[15-i][j];  
+               if((i<8)&&(j>=8))      grid_value[i][j]=grid_value[i][15-j];
+               if((i>=8)&&(j>=8))     grid_value[i][j]=grid_value[15-i][15-j];     
+               grid_count[i][j]=0;
      }
      
      for(i=0;i<16;i++){                           //Setting boundary walls
-        maze[0][i].wallpresent[1]=1;
-        maze[15][i].wallpresent[2]=1;
-        maze[i][0].wallpresent[3]=1;
-        maze[i][15].wallpresent[0]=1;
+        wallpresent[0][i][1]=1;
+        wallpresent[15][i][2]=1;
+        wallpresent[i][0][3]=1;
+        wallpresent[i][15][0]=1;
      }
        
 }
